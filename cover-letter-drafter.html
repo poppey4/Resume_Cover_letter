@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cover Letter Drafter</title>
+<style>
+  :root{
+    --bg: #0B0C10;
+    --surface: #15171F;
+    --surface-2: #1C1F2A;
+    --border: #2A2D3A;
+    --text: #E7E5E0;
+    --text-muted: #8A8D99;
+    --accent: #7C3AED;
+    --accent-soft: rgba(124,58,237,0.16);
+    --paper: #F6F3EC;
+    --paper-text: #232017;
+    --paper-muted: #8A8275;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .eyebrow{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  h1{
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.15;
+    margin: 0 0 12px;
+    max-width: 14ch;
+  }
+
+  .sub{
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0 0 28px;
+  }
+
+  .key-note{
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+
+  .key-note a{ color: #C9B6FF; text-decoration: none; }
+  .key-note a:hover{ text-decoration: underline; }
+
+  .grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 760px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .field{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field label{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .upload-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .upload-btn{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .upload-btn:hover{
+    border-color: var(--accent);
+    color: #C9B6FF;
+  }
+
+  .upload-hint{
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: normal;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  .upload-hint.success{ color: #8FD19E; }
+  .upload-hint.error{ color: #FF8A8A; }
+
+  textarea{
+    width: 100%;
+    min-height: 220px;
+    resize: vertical;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.55;
+    padding: 12px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  textarea::placeholder{ color: #565A68; }
+
+  textarea:focus{
+    border-color: var(--accent);
+  }
+
+  .controls{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 28px;
+  }
+
+  .tone-group{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tone-group span.label{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    align-self: center;
+    margin-right: 4px;
+  }
+
+  .pill{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pill:hover{
+    border-color: #44485c;
+    color: var(--text);
+  }
+
+  .pill.active{
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: #C9B6FF;
+  }
+
+  .generate-btn{
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    white-space: nowrap;
+  }
+
+  .generate-btn:hover{ background: #8E4FFF; }
+  .generate-btn:active{ transform: scale(0.98); }
+
+  .generate-btn:disabled{
+    background: #3A3D4A;
+    color: #80838F;
+    cursor: not-allowed;
+  }
+
+  .status{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    min-height: 18px;
+    margin: -8px 0 24px;
+  }
+
+  .status.error{ color: #FF8A8A; }
+
+  /* --- Letter output --- */
+  .letter-stage{
+    display: none;
+  }
+
+  .letter-stage.visible{
+    display: block;
+    animation: rise 0.5s ease forwards;
+  }
+
+  @keyframes rise{
+    from{ opacity: 0; transform: translateY(16px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .letter-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .letter-head .eyebrow{ margin: 0; }
+
+  .copy-btn{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .copy-btn:hover{
+    color: var(--text);
+    border-color: #44485c;
+  }
+
+  .paper{
+    background: var(--paper);
+    color: var(--paper-text);
+    border-radius: 6px;
+    padding: 48px 44px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15.5px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    position: relative;
+    box-shadow: 0 24px 60px -24px rgba(0,0,0,0.55);
+    clip-path: polygon(
+      0% 1.2%, 4% 0%, 9% 0.8%, 14% 0%, 19% 0.6%, 24% 0%, 29% 0.9%, 34% 0%,
+      39% 0.5%, 44% 0%, 49% 0.8%, 54% 0%, 59% 0.6%, 64% 0%, 69% 0.9%, 74% 0%,
+      79% 0.5%, 84% 0%, 89% 0.8%, 94% 0%, 100% 0.6%,
+      100% 100%, 0% 100%
+    );
+  }
+
+  @media (max-width: 600px){
+    .paper{ padding: 32px 22px; font-size: 14.5px; }
+  }
+
+  footer{
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  footer a{ color: #C9B6FF; text-decoration: none; }
+  footer a:hover{ text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Cover Letter Drafter</p>
+  <h1>Paste your CV and the job post. Get a letter worth sending.</h1>
+  <p class="sub">
+    Drop in your résumé and the job description below. The tool builds a ready-to-use prompt that
+    pulls out what's actually relevant to this role — paste it into Claude and get a tailored cover
+    letter back, no filler, no generic "I am writing to express my interest" template.
+  </p>
+
+  <div class="grid">
+    <div class="field">
+      <label for="cv">Your CV / Résumé</label>
+      <div class="upload-row">
+        <label class="upload-btn" for="cvFile">Upload file</label>
+        <input type="file" id="cvFile" accept=".pdf,.docx,.txt" hidden>
+        <span class="upload-hint" id="uploadHint">PDF, DOCX, or TXT — or just paste below</span>
+      </div>
+      <textarea id="cv" placeholder="Paste your full CV text here — experience, skills, education, certifications..."></textarea>
+    </div>
+    <div class="field">
+      <label for="jd">Job Description</label>
+      <textarea id="jd" placeholder="Paste the job description you're applying to..."></textarea>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="tone-group">
+      <span class="label">Tone</span>
+      <button class="pill active" data-tone="Professional and polished">Professional</button>
+      <button class="pill" data-tone="Direct and confident">Direct</button>
+      <button class="pill" data-tone="Warm and personable">Warm</button>
+    </div>
+    <button class="generate-btn" id="generateBtn">Build prompt</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="letter-stage" id="letterStage">
+    <div class="letter-head">
+      <p class="eyebrow">Ready to paste into Claude</p>
+      <div style="display:flex; gap:8px; flex-wrap: wrap;">
+        <button class="copy-btn" id="copyBtn">Copy prompt</button>
+        <a class="copy-btn" id="openClaudeBtn" href="https://claude.ai/new" target="_blank" rel="noopener" style="text-decoration:none; display:inline-flex; align-items:center;">Open Claude.ai</a>
+        <a class="copy-btn" id="openDesktopBtn" href="#" style="text-decoration:none; display:inline-flex; align-items:center;">Open in Claude Desktop</a>
+      </div>
+    </div>
+    <div class="paper" id="paper"></div>
+    <p class="key-note" style="margin-top:14px;">
+      Click "Copy prompt", then "Open Claude.ai", paste it into a new chat, and send — free with a
+      Claude.ai account. If you have the Claude desktop app installed, "Open in Claude Desktop" will
+      open it with the prompt already filled in (it won't do anything if the app isn't installed).
+    </p>
+  </div>
+
+  <footer>
+    Nothing you type here is stored or sent anywhere by this page — everything happens in your
+    browser. The prompt is only sent to Claude once you paste it yourself. Always review the draft
+    before sending: check facts, dates, and the company name.
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+  let selectedTone = "Professional and polished";
+
+  // --- Tone selection ---
+  document.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedTone = btn.dataset.tone;
+    });
+  });
+
+  // --- CV file upload ---
+  const cvFileInput = document.getElementById('cvFile');
+  const cvTextarea = document.getElementById('cv');
+  const uploadHint = document.getElementById('uploadHint');
+
+  function setUploadHint(msg, state){
+    uploadHint.textContent = msg;
+    uploadHint.classList.remove('success', 'error');
+    if(state) uploadHint.classList.add(state);
+  }
+
+  cvFileInput.addEventListener('change', async () => {
+    const file = cvFileInput.files[0];
+    if(!file) return;
+
+    const name = file.name.toLowerCase();
+    setUploadHint('Reading ' + file.name + '...');
+
+    try{
+      let text = '';
+
+      if(name.endsWith('.pdf')){
+        if(typeof pdfjsLib === 'undefined'){
+          throw new Error('PDF reader failed to load.');
+        }
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const pageTexts = [];
+        for(let i = 1; i <= pdf.numPages; i++){
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const pageText = content.items.map(item => item.str).join(' ');
+          pageTexts.push(pageText);
+        }
+        text = pageTexts.join('\n\n');
+
+      } else if(name.endsWith('.docx')){
+        if(typeof mammoth === 'undefined'){
+          throw new Error('DOCX reader failed to load.');
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        text = result.value;
+
+      } else if(name.endsWith('.txt')){
+        text = await file.text();
+
+      } else {
+        throw new Error('Unsupported file type. Use PDF, DOCX, or TXT.');
+      }
+
+      text = text.trim();
+      if(!text){
+        throw new Error('No readable text found in this file.');
+      }
+
+      cvTextarea.value = text;
+      setUploadHint('Loaded ' + file.name + ' — feel free to edit below.', 'success');
+    } catch(err){
+      console.error(err);
+      setUploadHint(err.message || 'Could not read that file.', 'error');
+    } finally {
+      cvFileInput.value = '';
+    }
+  });
+
+  // --- Generation ---
+  const generateBtn = document.getElementById('generateBtn');
+  const statusEl = document.getElementById('status');
+  const letterStage = document.getElementById('letterStage');
+  const paperEl = document.getElementById('paper');
+  const copyBtn = document.getElementById('copyBtn');
+
+  function setStatus(msg, isError){
+    statusEl.textContent = msg || '';
+    statusEl.classList.toggle('error', !!isError);
+  }
+
+  generateBtn.addEventListener('click', () => {
+    const cv = document.getElementById('cv').value.trim();
+    const jd = document.getElementById('jd').value.trim();
+
+    if(!cv || !jd){
+      setStatus('Please paste both your CV and the job description.', true);
+      return;
+    }
+
+    const prompt = `You are an expert career writer specializing in cover letters.
+
+I'll give you my CV/résumé and a job description. Write a tailored, specific cover letter for me.
+
+Rules:
+- 3-4 paragraphs, roughly 250-350 words.
+- Open by referencing the specific role (use the job title from the job description if present).
+- Pull 2-4 concrete, specific details from my CV (roles, tools, achievements) that map directly to what the job description asks for. Do not invent experience, employers, dates, or skills that are not present in my CV.
+- Write in a natural, human voice. Tone: ${selectedTone}.
+- Avoid clichés and generic filler ("I am writing to express my interest", "I am a hard worker", "team player", "passionate about").
+- If the company name is not given in the job description, use the placeholder [Company Name]. If a hiring manager's name is not given, address it to "Hiring Manager".
+- End with a brief, confident closing paragraph and a sign-off using my name from the CV if it can be identified, otherwise omit the name line.
+- Output ONLY the cover letter text. No headers, no markdown formatting, no commentary, no explanation before or after.
+
+CV / RESUME:
+${cv}
+
+---
+
+JOB DESCRIPTION:
+${jd}`;
+
+    paperEl.textContent = prompt;
+    letterStage.classList.add('visible');
+    setStatus('Prompt ready. Copy it and paste it into Claude.ai.');
+
+    const openDesktopBtn = document.getElementById('openDesktopBtn');
+    openDesktopBtn.href = 'claude://claude.ai/new?q=' + encodeURIComponent(prompt);
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const text = paperEl.textContent;
+    if(!text) return;
+
+    function flashCopied(label){
+      const original = copyBtn.textContent;
+      copyBtn.textContent = label || 'Copied';
+      setTimeout(() => { copyBtn.textContent = original; }, 1500);
+    }
+
+    // Try the modern Clipboard API first
+    try{
+      await navigator.clipboard.writeText(text);
+      flashCopied('Copied');
+      return;
+    } catch(err){
+      console.warn('Clipboard API unavailable, falling back:', err);
+    }
+
+    // Fallback: hidden textarea + execCommand('copy')
+    try{
+      const tempArea = document.createElement('textarea');
+      tempArea.value = text;
+      tempArea.style.position = 'fixed';
+      tempArea.style.left = '-9999px';
+      document.body.appendChild(tempArea);
+      tempArea.focus();
+      tempArea.select();
+      const ok = document.execCommand('copy');
+      document.body.removeChild(tempArea);
+      if(ok){
+        flashCopied('Copied');
+        return;
+      }
+    } catch(err){
+      console.warn('execCommand fallback failed:', err);
+    }
+
+    // Last resort: select the text on the page so the user can press Ctrl/Cmd+C
+    const range = document.createRange();
+    range.selectNodeContents(paperEl);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    setStatus('Could not copy automatically — text is selected, press Ctrl+C (or Cmd+C) to copy.', true);
+  });
+</script>
+</body>
+</html>
