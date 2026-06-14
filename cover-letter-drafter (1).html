@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cover Letter Drafter</title>
+<style>
+  :root{
+    --bg: #0B0C10;
+    --surface: #15171F;
+    --surface-2: #1C1F2A;
+    --border: #2A2D3A;
+    --text: #E7E5E0;
+    --text-muted: #8A8D99;
+    --accent: #7C3AED;
+    --accent-soft: rgba(124,58,237,0.16);
+    --paper: #F6F3EC;
+    --paper-text: #232017;
+    --paper-muted: #8A8275;
+  }
+
+  *{ box-sizing: border-box; }
+
+  html, body{
+    margin:0;
+    padding:0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap{
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  .eyebrow{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  h1{
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 400;
+    font-size: clamp(28px, 4vw, 42px);
+    line-height: 1.15;
+    margin: 0 0 12px;
+    max-width: 14ch;
+  }
+
+  .sub{
+    color: var(--text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 60ch;
+    margin: 0 0 28px;
+  }
+
+  /* --- API key panel --- */
+  .key-panel{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-bottom: 28px;
+  }
+
+  .key-panel label{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .key-row{
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  input[type="password"], input[type="text"]{
+    flex: 1;
+    min-width: 220px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    padding: 10px 12px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  input[type="password"]:focus, input[type="text"]:focus{
+    border-color: var(--accent);
+  }
+
+  .toggle-visibility{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 12px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .toggle-visibility:hover{ color: var(--text); border-color: #44485c; }
+
+  .remember-row{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .remember-row input{ accent-color: var(--accent); }
+
+  .key-note{
+    font-size: 12.5px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-top: 12px;
+  }
+
+  .key-note a{ color: #C9B6FF; text-decoration: none; }
+  .key-note a:hover{ text-decoration: underline; }
+
+  .grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  @media (max-width: 760px){
+    .grid{ grid-template-columns: 1fr; }
+  }
+
+  .field{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .field label{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+
+  .upload-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .upload-btn{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 12.5px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-transform: none;
+    letter-spacing: normal;
+  }
+
+  .upload-btn:hover{
+    border-color: var(--accent);
+    color: #C9B6FF;
+  }
+
+  .upload-hint{
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: none;
+    letter-spacing: normal;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  }
+
+  .upload-hint.success{ color: #8FD19E; }
+  .upload-hint.error{ color: #FF8A8A; }
+
+  textarea{
+    width: 100%;
+    min-height: 220px;
+    resize: vertical;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 13.5px;
+    line-height: 1.55;
+    padding: 12px;
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+
+  textarea::placeholder{ color: #565A68; }
+
+  textarea:focus{
+    border-color: var(--accent);
+  }
+
+  .controls{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 28px;
+  }
+
+  .tone-group{
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tone-group span.label{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    align-self: center;
+    margin-right: 4px;
+  }
+
+  .pill{
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 7px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .pill:hover{
+    border-color: #44485c;
+    color: var(--text);
+  }
+
+  .pill.active{
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: #C9B6FF;
+  }
+
+  .generate-btn{
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.1s ease;
+    white-space: nowrap;
+  }
+
+  .generate-btn:hover{ background: #8E4FFF; }
+  .generate-btn:active{ transform: scale(0.98); }
+
+  .generate-btn:disabled{
+    background: #3A3D4A;
+    color: #80838F;
+    cursor: not-allowed;
+  }
+
+  .status{
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--text-muted);
+    min-height: 18px;
+    margin: -8px 0 24px;
+  }
+
+  .status.error{ color: #FF8A8A; }
+
+  /* --- Letter output --- */
+  .letter-stage{
+    display: none;
+  }
+
+  .letter-stage.visible{
+    display: block;
+    animation: rise 0.5s ease forwards;
+  }
+
+  @keyframes rise{
+    from{ opacity: 0; transform: translateY(16px); }
+    to{ opacity: 1; transform: translateY(0); }
+  }
+
+  .letter-head{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .letter-head .eyebrow{ margin: 0; }
+
+  .copy-btn{
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 7px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+
+  .copy-btn:hover{
+    color: var(--text);
+    border-color: #44485c;
+  }
+
+  .paper{
+    background: var(--paper);
+    color: var(--paper-text);
+    border-radius: 6px;
+    padding: 48px 44px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 15.5px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    position: relative;
+    box-shadow: 0 24px 60px -24px rgba(0,0,0,0.55);
+    clip-path: polygon(
+      0% 1.2%, 4% 0%, 9% 0.8%, 14% 0%, 19% 0.6%, 24% 0%, 29% 0.9%, 34% 0%,
+      39% 0.5%, 44% 0%, 49% 0.8%, 54% 0%, 59% 0.6%, 64% 0%, 69% 0.9%, 74% 0%,
+      79% 0.5%, 84% 0%, 89% 0.8%, 94% 0%, 100% 0.6%,
+      100% 100%, 0% 100%
+    );
+  }
+
+  @media (max-width: 600px){
+    .paper{ padding: 32px 22px; font-size: 14.5px; }
+  }
+
+  footer{
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  footer a{ color: #C9B6FF; text-decoration: none; }
+  footer a:hover{ text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="eyebrow">Cover Letter Drafter</p>
+  <h1>Paste your CV and the job post. Get a letter worth sending.</h1>
+  <p class="sub">
+    Drop in your résumé and the job description below. The tool pulls out what's actually relevant
+    to this role and drafts a tailored cover letter — no filler, no generic "I am writing to express
+    my interest" template.
+  </p>
+
+  <div class="key-panel">
+    <label for="apiKey">Anthropic API key</label>
+    <div class="key-row">
+      <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+      <button class="toggle-visibility" id="toggleKey">Show</button>
+    </div>
+    <div class="remember-row">
+      <input type="checkbox" id="rememberKey">
+      <label for="rememberKey" style="margin:0; text-transform:none; letter-spacing:normal; font-family:inherit;">Remember this key in this browser</label>
+    </div>
+    <p class="key-note">
+      This tool calls the Anthropic API directly from your browser, so it needs your own API key.
+      Get one at <a href="https://console.anthropic.com" target="_blank" rel="noopener">console.anthropic.com</a>.
+      Your key is sent only to Anthropic's API and is never sent anywhere else. If you check
+      "Remember", it's stored in this browser's local storage only — clear it anytime by unchecking
+      and refreshing.
+    </p>
+  </div>
+
+  <div class="grid">
+    <div class="field">
+      <label for="cv">Your CV / Résumé</label>
+      <div class="upload-row">
+        <label class="upload-btn" for="cvFile">Upload file</label>
+        <input type="file" id="cvFile" accept=".pdf,.docx,.txt" hidden>
+        <span class="upload-hint" id="uploadHint">PDF, DOCX, or TXT — or just paste below</span>
+      </div>
+      <textarea id="cv" placeholder="Paste your full CV text here — experience, skills, education, certifications..."></textarea>
+    </div>
+    <div class="field">
+      <label for="jd">Job Description</label>
+      <textarea id="jd" placeholder="Paste the job description you're applying to..."></textarea>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="tone-group">
+      <span class="label">Tone</span>
+      <button class="pill active" data-tone="Professional and polished">Professional</button>
+      <button class="pill" data-tone="Direct and confident">Direct</button>
+      <button class="pill" data-tone="Warm and personable">Warm</button>
+    </div>
+    <button class="generate-btn" id="generateBtn">Generate cover letter</button>
+  </div>
+
+  <div class="status" id="status"></div>
+
+  <div class="letter-stage" id="letterStage">
+    <div class="letter-head">
+      <p class="eyebrow">Draft</p>
+      <button class="copy-btn" id="copyBtn">Copy text</button>
+    </div>
+    <div class="paper" id="paper"></div>
+  </div>
+
+  <footer>
+    Nothing you type here is stored on any server. Your CV and job description are sent directly
+    from your browser to Anthropic's API to generate the letter. Always review the draft before
+    sending: check facts, dates, and the company name.
+  </footer>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script>
+  let selectedTone = "Professional and polished";
+
+  // --- Tone selection ---
+  document.querySelectorAll('.pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedTone = btn.dataset.tone;
+    });
+  });
+
+  // --- API key handling ---
+  const apiKeyInput = document.getElementById('apiKey');
+  const toggleKeyBtn = document.getElementById('toggleKey');
+  const rememberCheckbox = document.getElementById('rememberKey');
+
+  try{
+    const savedKey = localStorage.getItem('coverLetterDrafter_apiKey');
+    if(savedKey){
+      apiKeyInput.value = savedKey;
+      rememberCheckbox.checked = true;
+    }
+  } catch(e){ /* localStorage unavailable, ignore */ }
+
+  toggleKeyBtn.addEventListener('click', () => {
+    if(apiKeyInput.type === 'password'){
+      apiKeyInput.type = 'text';
+      toggleKeyBtn.textContent = 'Hide';
+    } else {
+      apiKeyInput.type = 'password';
+      toggleKeyBtn.textContent = 'Show';
+    }
+  });
+
+  function persistKeyIfNeeded(){
+    try{
+      if(rememberCheckbox.checked){
+        localStorage.setItem('coverLetterDrafter_apiKey', apiKeyInput.value.trim());
+      } else {
+        localStorage.removeItem('coverLetterDrafter_apiKey');
+      }
+    } catch(e){ /* ignore */ }
+  }
+
+  rememberCheckbox.addEventListener('change', persistKeyIfNeeded);
+
+  // --- CV file upload ---
+  const cvFileInput = document.getElementById('cvFile');
+  const cvTextarea = document.getElementById('cv');
+  const uploadHint = document.getElementById('uploadHint');
+
+  function setUploadHint(msg, state){
+    uploadHint.textContent = msg;
+    uploadHint.classList.remove('success', 'error');
+    if(state) uploadHint.classList.add(state);
+  }
+
+  cvFileInput.addEventListener('change', async () => {
+    const file = cvFileInput.files[0];
+    if(!file) return;
+
+    const name = file.name.toLowerCase();
+    setUploadHint('Reading ' + file.name + '...');
+
+    try{
+      let text = '';
+
+      if(name.endsWith('.pdf')){
+        if(typeof pdfjsLib === 'undefined'){
+          throw new Error('PDF reader failed to load.');
+        }
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        const pageTexts = [];
+        for(let i = 1; i <= pdf.numPages; i++){
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const pageText = content.items.map(item => item.str).join(' ');
+          pageTexts.push(pageText);
+        }
+        text = pageTexts.join('\n\n');
+
+      } else if(name.endsWith('.docx')){
+        if(typeof mammoth === 'undefined'){
+          throw new Error('DOCX reader failed to load.');
+        }
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        text = result.value;
+
+      } else if(name.endsWith('.txt')){
+        text = await file.text();
+
+      } else {
+        throw new Error('Unsupported file type. Use PDF, DOCX, or TXT.');
+      }
+
+      text = text.trim();
+      if(!text){
+        throw new Error('No readable text found in this file.');
+      }
+
+      cvTextarea.value = text;
+      setUploadHint('Loaded ' + file.name + ' — feel free to edit below.', 'success');
+    } catch(err){
+      console.error(err);
+      setUploadHint(err.message || 'Could not read that file.', 'error');
+    } finally {
+      cvFileInput.value = '';
+    }
+  });
+
+  // --- Generation ---
+  const generateBtn = document.getElementById('generateBtn');
+  const statusEl = document.getElementById('status');
+  const letterStage = document.getElementById('letterStage');
+  const paperEl = document.getElementById('paper');
+  const copyBtn = document.getElementById('copyBtn');
+
+  function setStatus(msg, isError){
+    statusEl.textContent = msg || '';
+    statusEl.classList.toggle('error', !!isError);
+  }
+
+  generateBtn.addEventListener('click', async () => {
+    const apiKey = apiKeyInput.value.trim();
+    const cv = document.getElementById('cv').value.trim();
+    const jd = document.getElementById('jd').value.trim();
+
+    if(!apiKey){
+      setStatus('Enter your Anthropic API key above.', true);
+      return;
+    }
+    if(!cv || !jd){
+      setStatus('Please paste both your CV and the job description.', true);
+      return;
+    }
+
+    persistKeyIfNeeded();
+
+    generateBtn.disabled = true;
+    generateBtn.textContent = 'Drafting...';
+    setStatus('Reading the job description and matching it against your CV...');
+    letterStage.classList.remove('visible');
+
+    const systemPrompt = `You are an expert career writer specializing in cover letters.
+
+You will be given a candidate's CV/résumé and a job description. Write a tailored, specific cover letter.
+
+Rules:
+- 3-4 paragraphs, roughly 250-350 words.
+- Open by referencing the specific role (use the job title from the job description if present).
+- Pull 2-4 concrete, specific details from the CV (roles, tools, achievements) that map directly to what the job description asks for. Do not invent experience, employers, dates, or skills that are not present in the CV.
+- Write in a natural, human voice. Tone: ${selectedTone}.
+- Avoid clichés and generic filler ("I am writing to express my interest", "I am a hard worker", "team player", "passionate about").
+- If the company name is not given in the job description, use the placeholder [Company Name]. If a hiring manager's name is not given, address it to "Hiring Manager".
+- End with a brief, confident closing paragraph and a sign-off using the candidate's name from the CV if it can be identified, otherwise omit the name line.
+- Output ONLY the cover letter text. No headers, no markdown formatting, no commentary, no explanation before or after.`;
+
+    const userMessage = `CV / RESUME:\n${cv}\n\n---\n\nJOB DESCRIPTION:\n${jd}`;
+
+    try{
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key": apiKey,
+          "anthropic-version": "2023-06-01",
+          "anthropic-dangerous-direct-browser-access": "true"
+        },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          system: systemPrompt,
+          messages: [
+            { role: "user", content: userMessage }
+          ]
+        })
+      });
+
+      const rawText = await response.text();
+      let data;
+      try{
+        data = JSON.parse(rawText);
+      } catch(parseErr){
+        throw new Error(
+          response.ok
+            ? 'The API returned an empty or unexpected response. If you are testing this inside a Claude.ai preview, try hosting the file (e.g. on GitHub Pages) and running it there with your own API key.'
+            : ('Request failed (' + response.status + '). ' + (rawText ? rawText.slice(0, 200) : ''))
+        );
+      }
+
+      if(!response.ok){
+        const errMsg = data?.error?.message || ('Request failed (' + response.status + ')');
+        throw new Error(errMsg);
+      }
+
+      const textBlocks = (data.content || []).filter(b => b.type === 'text').map(b => b.text);
+      const letterText = textBlocks.join('\n').trim();
+
+      if(!letterText){
+        throw new Error('No content returned.');
+      }
+
+      paperEl.textContent = letterText;
+      letterStage.classList.add('visible');
+      setStatus('Done. Review the draft below before sending.');
+    } catch(err){
+      console.error(err);
+      setStatus(err.message || 'Something went wrong generating the letter. Please try again.', true);
+    } finally {
+      generateBtn.disabled = false;
+      generateBtn.textContent = 'Generate cover letter';
+    }
+  });
+
+  copyBtn.addEventListener('click', async () => {
+    const text = paperEl.textContent;
+    if(!text) return;
+    try{
+      await navigator.clipboard.writeText(text);
+      const original = copyBtn.textContent;
+      copyBtn.textContent = 'Copied';
+      setTimeout(() => { copyBtn.textContent = original; }, 1500);
+    } catch(err){
+      console.error(err);
+    }
+  });
+</script>
+</body>
+</html>
